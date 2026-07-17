@@ -1,7 +1,50 @@
 name: Test Global News AI
 
 on:
+  workflow_dispaname: Test Global News AI
+
+on:
   workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Check Gemini Key
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "❌ GEMINI_API_KEY is NOT available"
+            exit 1
+          else
+            echo "✅ GEMINI_API_KEY loaded successfully"
+          fi
+
+      - name: Run Main
+        run: |
+          python main.py
+
+      - name: Upload News Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-output
+          path: output/news/tch:
 
 jobs:
   test:
