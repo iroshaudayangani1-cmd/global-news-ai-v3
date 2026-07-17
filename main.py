@@ -1,10 +1,17 @@
 from core.news_collector import collect_news
+from core.article_rewriter import rewrite_articles
 
 
 def main():
-    print("Starting Global News AI...")
+    print("===== GLOBAL NEWS AI =====")
+
+    print("\nStep 1: Collecting news...")
     collect_news()
-    print("Done!")
+
+    print("\nStep 2: Rewriting articles with Gemini...")
+    rewrite_articles()
+
+    print("\nAll tasks completed successfully.")
 
 
 if __name__ == "__main__":
