@@ -1,9 +1,6 @@
 name: Test Global News AI
 
 on:
-  workflow_dispaname: Test Global News AI
-
-on:
   workflow_dispatch:
 
 jobs:
@@ -44,32 +41,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: news-output
-          path: output/news/tch:
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install Requirements
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run Main
-        run: |
-          python main.py
-
-      - name: Upload News JSON
-        uses: actions/upload-artifact@v4
-        with:
-          name: collected-news
-          path: output/news/news.json
+          path: output/news/
