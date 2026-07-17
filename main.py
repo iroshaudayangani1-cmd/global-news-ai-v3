@@ -1,8 +1,10 @@
+from core.news_collector import collect_news
+
+
 def main():
-    print("===================================")
-    print(" Global News AI v3")
-    print(" GitHub Actions Test")
-    print("===================================")
+    print("Starting Global News AI...")
+    collect_news()
+    print("Done!")
 
 
 if __name__ == "__main__":
