@@ -11,9 +11,28 @@ from config.settings import (
 )
 
 
+def clean_json(text):
+    """Remove Markdown code blocks if Gemini returns them."""
+    text = text.strip()
+
+    if text.startswith("```json"):
+        text = text[7:]
+
+    if text.startswith("```"):
+        text = text[3:]
+
+    if text.endswith("```"):
+        text = text[:-3]
+
+    return text.strip()
+
+
 def rewrite_articles():
     if not GEMINI_API_KEY:
         raise ValueError("GEMINI_API_KEY not found.")
+
+    if not os.path.exists(NEWS_JSON):
+        raise FileNotFoundError(f"{NEWS_JSON} not found.")
 
     client = genai.Client(api_key=GEMINI_API_KEY)
 
@@ -22,29 +41,39 @@ def rewrite_articles():
 
     rewritten = []
 
-    for article in news["articles"][:5]:
+    articles = news.get("articles", [])
+
+    print(f"Found {len(articles)} articles.")
+
+    for i, article in enumerate(articles[:5], start=1):
+
+        print(f"Rewriting article {i}...")
+
         prompt = f"""
 You are a professional news editor.
 
-Rewrite this news article into a unique, SEO-friendly blog post.
+Rewrite the following news article into a completely original,
+SEO-friendly blog post.
 
-Return ONLY valid JSON in this format:
+Return ONLY valid JSON.
+
+Format:
 
 {{
-"title":"",
-"meta_description":"",
-"tags":["","",""],
-"article":""
+    "title": "",
+    "meta_description": "",
+    "tags": ["", "", ""],
+    "article": ""
 }}
 
 Title:
-{article["title"]}
+{article.get("title","")}
 
 Summary:
-{article["summary"]}
+{article.get("summary","")}
 
 Source:
-{article["source"]}
+{article.get("source","")}
 """
 
         try:
@@ -53,19 +82,18 @@ Source:
                 contents=prompt,
             )
 
-            text = response.text.strip()
-
-            # Remove Markdown code fences if Gemini adds them
-            text = text.replace("```json", "").replace("```", "").strip()
+            text = clean_json(response.text)
 
             rewritten.append(json.loads(text))
 
+            print("✓ Success")
+
         except Exception as e:
-            print(f"Error rewriting article: {e}")
+            print(f"✗ Failed: {e}")
 
     os.makedirs("output/news", exist_ok=True)
 
     with open(REWRITTEN_JSON, "w", encoding="utf-8") as f:
         json.dump(rewritten, f, indent=4, ensure_ascii=False)
 
-    print(f"Rewrote {len(rewritten)} articles.")
+    print(f"\nFinished! Rewrote {len(rewritten)} articles.")
