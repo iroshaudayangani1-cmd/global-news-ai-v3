@@ -1,17 +1,22 @@
 from core.news_collector import collect_news
 from core.article_rewriter import rewrite_articles
+from core.publisher import publish_articles
 
 
 def main():
+
     print("===== GLOBAL NEWS AI =====")
 
-    print("\nStep 1: Collecting news...")
+    print("\nStep 1 : Collecting News")
     collect_news()
 
-    print("\nStep 2: Rewriting articles with Gemini...")
+    print("\nStep 2 : Rewriting Articles")
     rewrite_articles()
 
-    print("\nAll tasks completed successfully.")
+    print("\nStep 3 : Publishing to Blogger")
+    publish_articles()
+
+    print("\nAll Tasks Completed Successfully")
 
 
 if __name__ == "__main__":
