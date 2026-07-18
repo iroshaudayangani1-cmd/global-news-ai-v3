@@ -3,7 +3,7 @@ import requests
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
 
-from config import (
+from config.settings import (
     BLOGGER_CLIENT_ID,
     BLOGGER_CLIENT_SECRET,
     BLOGGER_REFRESH_TOKEN,
