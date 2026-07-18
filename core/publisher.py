@@ -22,7 +22,11 @@ def publish_articles():
     article = articles[0]
 
     title = article["title"]
-    content = article["article"]
+    content = f"""
+<h2>{article['title']}</h2>
+
+<p>{article['article']}</p>
+"""
 
     print(f"Publishing: {title}")
 
