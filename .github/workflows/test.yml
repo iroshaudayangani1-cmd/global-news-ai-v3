@@ -37,9 +37,9 @@ jobs:
             echo "✅ GEMINI_API_KEY loaded successfully"
           fi
 
-      - name: Run Main
+      - name: Test Gemini
         run: |
-          python main.py
+         python test_gemini.py
 
       - name: Upload News Files
         uses: actions/upload-artifact@v4
