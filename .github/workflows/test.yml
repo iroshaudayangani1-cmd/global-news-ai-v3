@@ -38,8 +38,8 @@ jobs:
           fi
 
       - name: Run Main
-       run: |
-        python main.py
+        run: |
+          python main.py
 
       - name: Upload News Files
         uses: actions/upload-artifact@v4
