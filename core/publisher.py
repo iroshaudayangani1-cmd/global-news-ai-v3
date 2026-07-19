@@ -1,13 +1,12 @@
 import json
 import os
+from datetime import datetime
 
 from config.settings import REWRITTEN_JSON
 from core.blogger import (
     publish_post,
     get_recent_titles,
 )
-
-from datetime import datetime
 
 
 def publish_articles():
@@ -31,6 +30,8 @@ def publish_articles():
         if title.lower() in existing_titles:
             print(f"Skipping duplicate: {title}")
             continue
+
+        tags = article.get("tags", [])
 
         today = datetime.utcnow().strftime("%B %d, %Y")
 
@@ -61,7 +62,13 @@ technology, business and world events every day.
 </div>
 """
 
-        result = publish_post(title, content)
+        print("Publishing:", title)
+
+        result = publish_post(
+            title=title,
+            content=content,
+            tags=tags,
+        )
 
         print("=================================")
         print("Published Successfully")
