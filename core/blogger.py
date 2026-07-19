@@ -13,10 +13,6 @@ TOKEN_URL = "https://oauth2.googleapis.com/token"
 
 
 def get_access_token():
-    print("CLIENT ID:", BLOGGER_CLIENT_ID[:40])
-    print("CLIENT SECRET:", BLOGGER_CLIENT_SECRET[:10])
-    print("REFRESH TOKEN:", BLOGGER_REFRESH_TOKEN[:20])
-
     creds = Credentials(
         None,
         refresh_token=BLOGGER_REFRESH_TOKEN,
@@ -30,8 +26,7 @@ def get_access_token():
     return creds.token
 
 
-def publish_post(title, content):
-    def get_recent_titles():
+def get_recent_titles():
 
     access_token = get_access_token()
 
@@ -53,10 +48,13 @@ def publish_post(title, content):
     titles = set()
 
     for post in data.get("items", []):
-
         titles.add(post["title"].lower())
 
     return titles
+
+
+def publish_post(title, content):
+
     access_token = get_access_token()
 
     url = f"https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts/"
@@ -72,7 +70,11 @@ def publish_post(title, content):
         "content": content,
     }
 
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(
+        url,
+        headers=headers,
+        json=data,
+    )
 
     print("Status Code:", response.status_code)
     print("Response:", response.text)
