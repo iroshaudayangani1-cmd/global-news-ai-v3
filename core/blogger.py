@@ -14,6 +14,10 @@ TOKEN_URL = "https://oauth2.googleapis.com/token"
 
 
 def get_access_token():
+    print("CLIENT ID:", BLOGGER_CLIENT_ID)
+    print("CLIENT SECRET:", BLOGGER_CLIENT_SECRET[:8] + "...")
+    print("REFRESH TOKEN:", BLOGGER_REFRESH_TOKEN[:15] + "...")
+
     creds = Credentials(
         None,
         refresh_token=BLOGGER_REFRESH_TOKEN,
@@ -21,6 +25,9 @@ def get_access_token():
         client_id=BLOGGER_CLIENT_ID,
         client_secret=BLOGGER_CLIENT_SECRET,
     )
+
+    creds.refresh(Request())
+    return creds.token
 
     creds.refresh(Request())
     return creds.token
