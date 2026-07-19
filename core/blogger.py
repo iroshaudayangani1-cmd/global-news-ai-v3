@@ -13,6 +13,7 @@ TOKEN_URL = "https://oauth2.googleapis.com/token"
 
 
 def get_access_token():
+
     creds = Credentials(
         None,
         refresh_token=BLOGGER_REFRESH_TOKEN,
@@ -53,7 +54,7 @@ def get_recent_titles():
     return titles
 
 
-def publish_post(title, content):
+def publish_post(title, content, tags):
 
     access_token = get_access_token()
 
@@ -68,6 +69,7 @@ def publish_post(title, content):
         "kind": "blogger#post",
         "title": title,
         "content": content,
+        "labels": tags,
     }
 
     response = requests.post(
