@@ -26,11 +26,9 @@ def get_access_token():
         client_secret=BLOGGER_CLIENT_SECRET,
     )
 
-    creds.refresh(Request())
-    return creds.token
-
-    creds.refresh(Request())
-    return creds.token
+    print("CLIENT ID:", BLOGGER_CLIENT_ID[:40])
+print("CLIENT SECRET:", BLOGGER_CLIENT_SECRET[:10])
+print("REFRESH TOKEN:", BLOGGER_REFRESH_TOKEN[:20])
 
 
 def publish_post(title, content):
