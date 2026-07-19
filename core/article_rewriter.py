@@ -93,7 +93,25 @@ Return ONLY this JSON:
 {{
   "title": "",
   "meta_description": "",
-  "tags": ["", "", ""],
+  "tags": [Choose ONLY labels from this list:
+
+- World
+- Politics
+- Business
+- Technology
+- Sports
+- Health
+- Science
+- Entertainment
+
+Return 1 to 3 labels only.
+
+Example:
+
+"tags": [
+  "World",
+  "Politics"
+]],
   "article": ""
 }}
 
