@@ -1,72 +1,56 @@
-import json
-import os
+prompt = f"""
+You are an experienced journalist writing for Global Viral Report.
 
-from google import genai
+Rewrite the following news into a completely original, SEO-friendly article.
 
-from config.settings import (
-    GEMINI_API_KEY,
-    GEMINI_MODEL,
-    NEWS_JSON,
-    REWRITTEN_JSON,
-)
+IMPORTANT RULES:
 
+- Return ONLY valid JSON.
+- Do NOT use Markdown.
+- Write 600-900 words.
+- Write in fluent, natural English.
+- Make the article engaging and factual.
+- Never copy the source text.
 
-def clean_json(text):
-    """Remove Markdown code blocks if Gemini returns them."""
-    text = text.strip()
+The article field MUST contain HTML.
 
-    if text.startswith("```json"):
-        text = text[7:]
+Use this structure:
 
-    if text.startswith("```"):
-        text = text[3:]
+<h2>Introduction</h2>
 
-    if text.endswith("```"):
-        text = text[:-3]
+<p>...</p>
 
-    return text.strip()
+<h2>What Happened?</h2>
 
+<p>...</p>
 
-def rewrite_articles():
-    if not GEMINI_API_KEY:
-        raise ValueError("GEMINI_API_KEY not found.")
+<h2>Key Developments</h2>
 
-    if not os.path.exists(NEWS_JSON):
-        raise FileNotFoundError(f"{NEWS_JSON} not found.")
+<p>...</p>
 
-    client = genai.Client(api_key=GEMINI_API_KEY)
+<ul>
+<li>...</li>
+<li>...</li>
+</ul>
 
-    with open(NEWS_JSON, "r", encoding="utf-8") as f:
-        news = json.load(f)
+<h2>International Response</h2>
 
-    rewritten = []
+<p>...</p>
 
-    articles = news.get("articles", [])
+<h2>What Happens Next?</h2>
 
-    print(f"Found {len(articles)} articles.")
+<p>...</p>
 
-    for i, article in enumerate(articles[:5], start=1):
-
-        print(f"Rewriting article {i}...")
-
-        prompt = f"""
-You are a professional news editor.
-
-Rewrite the following news article into a completely original,
-SEO-friendly blog post.
-
-Return ONLY valid JSON.
-
-Format:
+Return ONLY this JSON:
 
 {{
-    "title": "",
-    "meta_description": "",
-    "tags": ["", "", ""],
-    "article": ""
+  "title": "",
+  "meta_description": "",
+  "tags": ["", "", ""],
+  "article": ""
 }}
 
-Title:
+News Title:
 {article.get("title","")}
 
 Summary:
@@ -75,25 +59,3 @@ Summary:
 Source:
 {article.get("source","")}
 """
-
-        try:
-            response = client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt,
-            )
-
-            text = clean_json(response.text)
-
-            rewritten.append(json.loads(text))
-
-            print("✓ Success")
-
-        except Exception as e:
-            print(f"✗ Failed: {e}")
-
-    os.makedirs("output/news", exist_ok=True)
-
-    with open(REWRITTEN_JSON, "w", encoding="utf-8") as f:
-        json.dump(rewritten, f, indent=4, ensure_ascii=False)
-
-    print(f"\nFinished! Rewrote {len(rewritten)} articles.")
