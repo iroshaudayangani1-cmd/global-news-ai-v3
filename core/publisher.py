@@ -1,30 +1,40 @@
 import json
 import os
-from datetime import datetime
 
 from config.settings import REWRITTEN_JSON
-from core.blogger import publish_post
+from core.blogger import (
+    publish_post,
+    get_recent_titles,
+)
+
+from datetime import datetime
 
 
 def publish_articles():
 
     if not os.path.exists(REWRITTEN_JSON):
-        raise FileNotFoundError(f"{REWRITTEN_JSON} not found.")
+        raise FileNotFoundError(REWRITTEN_JSON)
 
     with open(REWRITTEN_JSON, "r", encoding="utf-8") as f:
         articles = json.load(f)
 
     if not articles:
-        print("No rewritten articles found.")
+        print("No rewritten articles.")
         return
 
-    article = articles[0]
+    existing_titles = get_recent_titles()
 
-    title = article["title"]
+    for article in articles:
 
-    today = datetime.utcnow().strftime("%B %d, %Y")
+        title = article["title"]
 
-    content = f"""
+        if title.lower() in existing_titles:
+            print(f"Skipping duplicate: {title}")
+            continue
+
+        today = datetime.utcnow().strftime("%B %d, %Y")
+
+        content = f"""
 <div class="news-article">
 
 <p><strong>Published:</strong> {today}</p>
@@ -40,8 +50,8 @@ def publish_articles():
 <h3>Stay Updated</h3>
 
 <p>
-Global Viral Report brings you the latest breaking news,
-technology, politics, business, health, sports and world events every day.
+Global Viral Report brings you breaking news,
+technology, business and world events every day.
 </p>
 
 <hr>
@@ -51,11 +61,13 @@ technology, politics, business, health, sports and world events every day.
 </div>
 """
 
-    print(f"Publishing: {title}")
+        result = publish_post(title, content)
 
-    result = publish_post(title, content)
+        print("=================================")
+        print("Published Successfully")
+        print(result["url"])
+        print("=================================")
 
-    print("=================================")
-    print("Published Successfully")
-    print(result["url"])
-    print("=================================")
+        return
+
+    print("No new articles to publish today.")
