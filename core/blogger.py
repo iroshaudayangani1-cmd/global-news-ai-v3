@@ -1,4 +1,3 @@
-import json
 import requests
 from google.oauth2.credentials import Credentials
 from google.auth.transport.requests import Request
@@ -14,9 +13,9 @@ TOKEN_URL = "https://oauth2.googleapis.com/token"
 
 
 def get_access_token():
-    print("CLIENT ID:", BLOGGER_CLIENT_ID)
-    print("CLIENT SECRET:", BLOGGER_CLIENT_SECRET[:8] + "...")
-    print("REFRESH TOKEN:", BLOGGER_REFRESH_TOKEN[:15] + "...")
+    print("CLIENT ID:", BLOGGER_CLIENT_ID[:40])
+    print("CLIENT SECRET:", BLOGGER_CLIENT_SECRET[:10])
+    print("REFRESH TOKEN:", BLOGGER_REFRESH_TOKEN[:20])
 
     creds = Credentials(
         None,
@@ -26,9 +25,9 @@ def get_access_token():
         client_secret=BLOGGER_CLIENT_SECRET,
     )
 
-    print("CLIENT ID:", BLOGGER_CLIENT_ID[:40])
-print("CLIENT SECRET:", BLOGGER_CLIENT_SECRET[:10])
-print("REFRESH TOKEN:", BLOGGER_REFRESH_TOKEN[:20])
+    creds.refresh(Request())
+
+    return creds.token
 
 
 def publish_post(title, content):
@@ -49,11 +48,9 @@ def publish_post(title, content):
 
     response = requests.post(url, headers=headers, json=data)
 
+    print("Status Code:", response.status_code)
+    print("Response:", response.text)
+
     response.raise_for_status()
 
-    post = response.json()
-
-    print("Published:")
-    print(post["url"])
-
-    return post
+    return response.json()
