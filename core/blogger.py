@@ -31,6 +31,32 @@ def get_access_token():
 
 
 def publish_post(title, content):
+    def get_recent_titles():
+
+    access_token = get_access_token()
+
+    url = (
+        f"https://www.googleapis.com/blogger/v3/blogs/"
+        f"{BLOG_ID}/posts?maxResults=20"
+    )
+
+    headers = {
+        "Authorization": f"Bearer {access_token}"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    titles = set()
+
+    for post in data.get("items", []):
+
+        titles.add(post["title"].lower())
+
+    return titles
     access_token = get_access_token()
 
     url = f"https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts/"
