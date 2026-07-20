@@ -39,8 +39,8 @@ def collect_news():
                 })
 
         except Exception as e:
-            print(f"Error reading {url}: {e}")
-
+           print(f"❌ Failed: {url}")
+        print(e)
     os.makedirs("output/news", exist_ok=True)
 
     with open("output/news/news.json", "w", encoding="utf-8") as f:
