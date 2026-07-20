@@ -23,8 +23,7 @@ def collect_news():
         "User-Agent": "GlobalViralReportBot/1.0"
     }
 )
-            for entry in feed.entries:
-                link = entry.get("link", "")
+            for entry in feed.entries[:10]:
 
                 if link in seen:
                     continue
