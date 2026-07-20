@@ -53,20 +53,19 @@ def rewrite_articles():
         prompt = f"""
 You are an experienced journalist writing for Global Viral Report.
 
-Rewrite the following news into a completely original,
-SEO-friendly article.
+Rewrite the following news into a completely original, SEO-friendly article.
 
-Requirements:
+IMPORTANT RULES
 
 - Return ONLY valid JSON.
 - Do NOT use Markdown.
-- Write between 600 and 900 words.
-- Write in professional English.
+- Write between 700 and 1000 words.
+- Write in fluent professional English.
 - Never copy the original wording.
-- Make the article engaging and factual.
+- Make the article engaging, factual and easy to read.
 - The "article" field MUST contain HTML.
 
-Use this structure:
+The HTML article MUST use this structure:
 
 <h2>Introduction</h2>
 <p>...</p>
@@ -80,6 +79,7 @@ Use this structure:
 <ul>
 <li>...</li>
 <li>...</li>
+<li>...</li>
 </ul>
 
 <h2>International Response</h2>
@@ -91,38 +91,71 @@ Use this structure:
 Return ONLY this JSON:
 
 {{
-  "title": "",
-  "meta_description": "",
-  "tags": [Choose ONLY labels from this list:
+    "title":"",
+    "slug":"",
+    "category":"",
+    "meta_description":"",
+    "tags":[],
+    "image_keywords":"",
+    "article":""
+}}
 
-- World
-- Politics
-- Business
-- Technology
-- Sports
-- Health
-- Science
-- Entertainment
+Rules:
 
-Return 1 to 3 labels only.
+"title"
+- SEO friendly.
+- Maximum 70 characters.
+
+"slug"
+- Lowercase only.
+- Hyphens only.
+- No spaces.
+
+"category"
+Choose ONLY ONE:
+
+World
+Politics
+Business
+Technology
+Sports
+Health
+Science
+Entertainment
+
+"tags"
+
+Choose between 1 and 3 labels from:
+
+World
+Politics
+Business
+Technology
+Sports
+Health
+Science
+Entertainment
+
+"image_keywords"
+
+Write one short search phrase that would find a high-quality news image.
 
 Example:
 
-"tags": [
-  "World",
-  "Politics"
-]],
-  "article": ""
-}}
+"image_keywords":"US Iran missile strike"
+
+"meta_description"
+
+Maximum 160 characters.
 
 News Title:
-{article.get("title", "")}
+{article.get("title","")}
 
 Summary:
-{article.get("summary", "")}
+{article.get("summary","")}
 
 Source:
-{article.get("source", "")}
+{article.get("source","")}
 """
 
         try:
@@ -153,3 +186,7 @@ Source:
         )
 
     print(f"\nFinished! Rewrote {len(rewritten)} articles.")
+
+
+if __name__ == "__main__":
+    rewrite_articles()
