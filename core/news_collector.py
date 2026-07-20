@@ -17,8 +17,12 @@ def collect_news():
 
     for url in RSS_FEEDS:
         try:
-            feed = feedparser.parse(url)
-
+           feed = feedparser.parse(
+    url,
+    request_headers={
+        "User-Agent": "GlobalViralReportBot/1.0"
+    }
+)
             for entry in feed.entries:
                 link = entry.get("link", "")
 
