@@ -1,22 +1,22 @@
-from google import genai
-import os
+from core.news_collector import collect_news
+from core.article_rewriter import rewrite_articles
+from core.publisher import publish_articles
 
 
 def main():
 
-    print("===== GEMINI MODEL TEST =====")
+    print("===== GLOBAL NEWS AI =====")
 
-    api_key = os.getenv("GEMINI_API_KEY")
+    print("\nStep 1 : Collecting News")
+    collect_news()
 
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY not found.")
+    print("\nStep 2 : Rewriting Articles")
+    rewrite_articles()
 
-    client = genai.Client(api_key=api_key)
+    print("\nStep 3 : Publishing to Blogger")
+    publish_articles()
 
-    print("\nAvailable Models:\n")
-
-    for model in client.models.list():
-        print(model.name)
+    print("\nAll Tasks Completed Successfully")
 
 
 if __name__ == "__main__":
