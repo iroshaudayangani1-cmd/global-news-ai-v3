@@ -1,11 +1,14 @@
 import json
 import os
+import time
 
 from google import genai
 
 from config.settings import (
     GEMINI_API_KEY,
     GEMINI_MODEL,
+    GEMINI_MAX_RETRIES,
+    GEMINI_RETRY_DELAY,
     NEWS_JSON,
     REWRITTEN_JSON,
 )
@@ -46,9 +49,10 @@ def rewrite_articles():
 
     rewritten = []
 
-    for i, article in enumerate(articles[:5], start=1):
+    # Change back to [:5] after testing
+    for i, article in enumerate(articles[:1], start=1):
 
-        print(f"Rewriting article {i}...")
+        print(f"\nRewriting article {i}...")
 
         prompt = f"""
 You are an experienced journalist writing for Global Viral Report.
@@ -140,40 +144,56 @@ Entertainment
 
 Write one short search phrase that would find a high-quality news image.
 
-Example:
-
-"image_keywords":"US Iran missile strike"
-
 "meta_description"
 
 Maximum 160 characters.
 
 News Title:
-{article.get("title","")}
+{article.get("title", "")}
 
 Summary:
-{article.get("summary","")}
+{article.get("summary", "")}
 
 Source:
-{article.get("source","")}
+{article.get("source", "")}
 """
 
-        try:
+        success = False
 
-            response = client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=prompt,
-            )
+        for attempt in range(1, GEMINI_MAX_RETRIES + 1):
 
-            text = clean_json(response.text)
+            try:
 
-            rewritten.append(json.loads(text))
+                print(f"Attempt {attempt}/{GEMINI_MAX_RETRIES}")
 
-            print("✓ Success")
+                response = client.models.generate_content(
+                    model=GEMINI_MODEL,
+                    contents=prompt,
+                )
 
-        except Exception as e:
+                text = clean_json(response.text)
 
-            print(f"✗ Failed: {e}")
+                rewritten.append(json.loads(text))
+
+                print("✓ Success")
+
+                success = True
+                break
+
+            except Exception as e:
+
+                print(f"Attempt {attempt} failed: {e}")
+
+                if "503" in str(e) and attempt < GEMINI_MAX_RETRIES:
+                    wait_time = GEMINI_RETRY_DELAY * attempt
+                    print(f"Gemini busy. Waiting {wait_time} seconds...")
+                    time.sleep(wait_time)
+                    continue
+
+                break
+
+        if not success:
+            print("Skipping article.")
 
     os.makedirs("output/news", exist_ok=True)
 
