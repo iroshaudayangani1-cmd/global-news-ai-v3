@@ -4,7 +4,14 @@ import os
 # GEMINI
 # ==========================
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-flash-latest"
+
+# Stable model
+GEMINI_MODEL = "gemini-2.5-flash"
+
+# Retry configuration
+GEMINI_MAX_RETRIES = 5
+GEMINI_RETRY_DELAY = 15  # seconds
+
 # ==========================
 # BLOGGER
 # ==========================
@@ -24,3 +31,8 @@ FACEBOOK_ACCESS_TOKEN = os.getenv("FACEBOOK_ACCESS_TOKEN")
 # ==========================
 NEWS_JSON = "output/news/news.json"
 REWRITTEN_JSON = "output/news/rewritten.json"
+
+# ==========================
+# IMAGES
+# ==========================
+IMAGE_FOLDER = "output/images"
