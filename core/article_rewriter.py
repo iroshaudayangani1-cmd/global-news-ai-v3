@@ -165,6 +165,9 @@ Source:
             try:
 
                 print(f"Attempt {attempt}/{GEMINI_MAX_RETRIES}")
+                print("=" * 60)
+                print("MODEL SENT TO API:", repr(GEMINI_MODEL))
+                print("=" * 60)
 
                 response = client.models.generate_content(
                     model=GEMINI_MODEL,
