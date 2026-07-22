@@ -35,8 +35,23 @@ def publish_articles():
 
         today = datetime.utcnow().strftime("%B %d, %Y")
 
+        image_html = ""
+
+        # If image_downloader.py added an image_url,
+        # insert it at the top of the article.
+        if article.get("image_url"):
+            image_html = f"""
+<p style="text-align:center;">
+<img src="{article['image_url']}"
+     alt="{title}"
+     style="max-width:100%;height:auto;border-radius:8px;">
+</p>
+"""
+
         content = f"""
 <div class="news-article">
+
+{image_html}
 
 <p><strong>Published:</strong> {today}</p>
 
