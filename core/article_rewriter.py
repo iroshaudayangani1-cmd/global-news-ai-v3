@@ -50,7 +50,7 @@ def rewrite_articles():
     rewritten = []
 
     # Change back to [:5] after testing
-    for i, article in enumerate(articles[:5], start=1):
+    for i, article in enumerate(articles[:1], start=1):
 
         print(f"\nRewriting article {i}...")
 
