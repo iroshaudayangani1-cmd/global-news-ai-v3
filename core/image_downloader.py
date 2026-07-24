@@ -1,14 +1,16 @@
 import json
 import os
-import requests
 
 from config.settings import (
     REWRITTEN_JSON,
-    IMAGE_FOLDER,
 )
 
 
 def download_images():
+    """
+    Instead of downloading copyrighted images from the internet,
+    generate an original AI image prompt for each article.
+    """
 
     if not os.path.exists(REWRITTEN_JSON):
         print("No rewritten articles found.")
@@ -17,55 +19,42 @@ def download_images():
     with open(REWRITTEN_JSON, "r", encoding="utf-8") as f:
         articles = json.load(f)
 
-    os.makedirs(IMAGE_FOLDER, exist_ok=True)
-
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
-
     for i, article in enumerate(articles, start=1):
 
-        keyword = article.get("image_keywords", "")
+        title = article.get("title", "")
+        keywords = article.get("image_keywords", "")
+        category = article.get("category", "News")
 
-        if not keyword:
-            print(f"Article {i}: No image keyword.")
-            continue
+        prompt = f"""
+Ultra realistic editorial news photograph.
 
-        image_url = (
-            "https://source.unsplash.com/1200x675/?"
-            + keyword.replace(" ", ",")
-        )
+Topic:
+{title}
 
-        filename = os.path.join(
-            IMAGE_FOLDER,
-            f"article_{i}.jpg"
-        )
+Keywords:
+{keywords}
 
-        try:
+Category:
+{category}
 
-            response = requests.get(
-                image_url,
-                headers=headers,
-                timeout=30,
-                allow_redirects=True,
-            )
+Style:
+Professional photojournalism,
+cinematic lighting,
+high detail,
+8k,
+natural colors,
+realistic people,
+realistic environment,
+news agency quality,
+no text,
+no watermark,
+no logo,
+16:9 composition.
+""".strip()
 
-            if response.status_code == 200:
+        article["image_prompt"] = prompt
 
-                with open(filename, "wb") as img:
-                    img.write(response.content)
-
-                article["image"] = filename
-
-                print(f"✓ Downloaded image for article {i}")
-
-            else:
-
-                print(f"Failed image {i}")
-
-        except Exception as e:
-
-            print(e)
+        print(f"✓ Generated AI image prompt for article {i}")
 
     with open(REWRITTEN_JSON, "w", encoding="utf-8") as f:
         json.dump(
@@ -75,7 +64,7 @@ def download_images():
             ensure_ascii=False,
         )
 
-    print("Finished downloading images.")
+    print("\nFinished generating AI image prompts.")
 
 
 if __name__ == "__main__":
