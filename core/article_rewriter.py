@@ -49,7 +49,7 @@ def rewrite_articles():
     rewritten = []
 
     # Free Gemini = rewrite only ONE article
-    for i, article in enumerate(articles[:5], start=1):
+    for i, article in enumerate(articles[:2], start=1):
 
         print(f"\nRewriting article {i}...")
 
