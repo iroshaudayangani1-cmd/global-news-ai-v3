@@ -15,7 +15,6 @@ from config.settings import (
 
 
 def clean_json(text):
-    """Remove markdown code blocks if Gemini returns them."""
     text = text.strip()
 
     if text.startswith("```json"):
@@ -36,7 +35,7 @@ def rewrite_articles():
         raise ValueError("GEMINI_API_KEY not found.")
 
     if not os.path.exists(NEWS_JSON):
-        raise FileNotFoundError(f"{NEWS_JSON} not found.")
+        raise FileNotFoundError(NEWS_JSON)
 
     client = genai.Client(api_key=GEMINI_API_KEY)
 
@@ -49,57 +48,55 @@ def rewrite_articles():
 
     rewritten = []
 
-    # Free plan = rewrite only one article
+    # Free Gemini = rewrite only ONE article
     for i, article in enumerate(articles[:1], start=1):
 
         print(f"\nRewriting article {i}...")
 
         prompt = f"""
-You are a senior Reuters/BBC style journalist writing for Global Viral Report.
+You are a senior Reuters and BBC journalist writing for Global Viral Report.
 
-Your job is to rewrite the news professionally.
+Rewrite the following news article professionally.
 
 IMPORTANT
 
 Return ONLY valid JSON.
-No Markdown.
+No markdown.
 No explanations.
 No extra text.
 
 GENERAL RULES
 
-- Write 450-650 words.
-- Professional journalism.
-- Easy to read.
-- Short paragraphs.
+- Write between 450 and 650 words.
+- Use professional journalism.
 - Never invent facts.
 - Never speculate.
-- Never add fake expert opinions.
-- Use ONLY the supplied information.
-- Rewrite completely in your own words.
+- Never copy the original wording.
+- Keep paragraphs short.
+- Use HTML only inside the article field.
 
 ARTICLE STRUCTURE
 
 <h2>Introduction</h2>
-<p>60-90 words</p>
+<p>...</p>
 
 <h2>What Happened?</h2>
-<p>80-120 words</p>
+<p>...</p>
 
 <h2>Key Facts</h2>
 
 <ul>
-<li>Fact 1</li>
-<li>Fact 2</li>
-<li>Fact 3</li>
-<li>Fact 4</li>
+<li>...</li>
+<li>...</li>
+<li>...</li>
+<li>...</li>
 </ul>
 
 <h2>Why It Matters</h2>
-<p>80-120 words</p>
+<p>...</p>
 
 <h2>What Happens Next?</h2>
-<p>60-100 words</p>
+<p>...</p>
 
 Return EXACTLY this JSON:
 
@@ -109,27 +106,25 @@ Return EXACTLY this JSON:
 "category":"",
 "meta_description":"",
 "tags":[],
-"image_keywords":"",
+"image_prompt":"",
 "article":""
 }}
 
 TITLE
 
-- SEO friendly
 - Maximum 65 characters
-- Clickable
+- SEO friendly
 - Natural
 - No clickbait
-- No ALL CAPS
 
 SLUG
 
-lowercase-only
-hyphen-separated
+- lowercase
+- hyphen-separated
 
 CATEGORY
 
-Choose ONE
+Choose ONE only:
 
 World
 Politics
@@ -142,21 +137,28 @@ Entertainment
 
 TAGS
 
-Choose 2 or 3.
+Choose 2 or 3 tags.
 
 META DESCRIPTION
 
 Maximum 155 characters.
 
-IMAGE KEYWORDS
+IMAGE PROMPT
 
-Instead of a simple keyword, generate an AI image prompt.
+Generate a detailed AI image prompt for a realistic editorial news photograph.
 
-Example:
+Requirements:
 
-Ultra realistic editorial news photograph of world leaders meeting during a peace summit, dramatic lighting, highly detailed, professional journalism style, 16:9 composition, no text, no watermark.
-
-The prompt must match THIS article.
+- ultra realistic
+- photojournalism
+- cinematic lighting
+- highly detailed
+- realistic people
+- 16:9 composition
+- suitable for a news website
+- no text
+- no logo
+- no watermark
 
 News Title:
 
@@ -201,9 +203,13 @@ Source:
                 print(f"Attempt {attempt} failed: {e}")
 
                 if "503" in str(e) and attempt < GEMINI_MAX_RETRIES:
-                    wait_time = GEMINI_RETRY_DELAY * attempt
-                    print(f"Gemini busy. Waiting {wait_time} seconds...")
-                    time.sleep(wait_time)
+
+                    wait = GEMINI_RETRY_DELAY * attempt
+
+                    print(f"Gemini busy. Waiting {wait} seconds...")
+
+                    time.sleep(wait)
+
                     continue
 
                 break
