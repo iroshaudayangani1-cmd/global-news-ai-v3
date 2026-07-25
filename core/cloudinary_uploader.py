@@ -20,6 +20,7 @@ def upload_image(image_path):
     result = cloudinary.uploader.upload(
         image_path,
         folder="global-viral-report",
+        overwrite=True,
     )
 
     return result["secure_url"]
