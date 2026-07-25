@@ -40,25 +40,41 @@ def get_recent_titles():
         "Authorization": f"Bearer {access_token}"
     }
 
-    response = requests.get(url, headers=headers)
+    try:
 
-    response.raise_for_status()
+        response = requests.get(
+            url,
+            headers=headers,
+            timeout=30,
+        )
 
-    data = response.json()
+        response.raise_for_status()
 
-    titles = set()
+        data = response.json()
 
-    for post in data.get("items", []):
-        titles.add(post["title"].lower())
+        titles = set()
 
-    return titles
+        for post in data.get("items", []):
+            titles.add(post["title"].lower())
+
+        return titles
+
+    except Exception as e:
+
+        print("Unable to read existing Blogger posts.")
+        print(e)
+
+        return set()
 
 
 def publish_post(title, content, tags):
 
     access_token = get_access_token()
 
-    url = f"https://www.googleapis.com/blogger/v3/blogs/{BLOG_ID}/posts/"
+    url = (
+        f"https://www.googleapis.com/blogger/v3/blogs/"
+        f"{BLOG_ID}/posts/"
+    )
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -72,15 +88,31 @@ def publish_post(title, content, tags):
         "labels": tags,
     }
 
-    response = requests.post(
-        url,
-        headers=headers,
-        json=data,
-    )
+    try:
 
-    print("Status Code:", response.status_code)
-    print("Response:", response.text)
+        response = requests.post(
+            url,
+            headers=headers,
+            json=data,
+            timeout=60,
+        )
 
-    response.raise_for_status()
+        print("Status Code:", response.status_code)
 
-    return response.json()
+        response.raise_for_status()
+
+        print("✓ Blogger accepted the post.")
+
+        return response.json()
+
+    except requests.HTTPError:
+
+        print("Blogger returned an error:")
+        print(response.text)
+        raise
+
+    except Exception as e:
+
+        print("Publishing failed.")
+        print(e)
+        raise
