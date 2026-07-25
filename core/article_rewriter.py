@@ -49,87 +49,87 @@ def rewrite_articles():
 
     rewritten = []
 
-    # Change back to [:5] after testing
+    # Free plan = rewrite only one article
     for i, article in enumerate(articles[:1], start=1):
 
         print(f"\nRewriting article {i}...")
 
         prompt = f"""
-You are an experienced journalist writing for Global Viral Report.
+You are a senior Reuters/BBC style journalist writing for Global Viral Report.
 
-Rewrite the following news into a completely original, SEO-friendly article.
+Your job is to rewrite the news professionally.
 
-IMPORTANT RULES
+IMPORTANT
 
-- Return ONLY valid JSON.
-- Do NOT use Markdown.
-- Write between 700 and 1000 words.
-- Write in fluent professional English.
-- Never copy the original wording.
-- Make the article engaging, factual and easy to read.
-- The "article" field MUST contain HTML.
+Return ONLY valid JSON.
+No Markdown.
+No explanations.
+No extra text.
 
-The HTML article MUST use this structure:
+GENERAL RULES
+
+- Write 450-650 words.
+- Professional journalism.
+- Easy to read.
+- Short paragraphs.
+- Never invent facts.
+- Never speculate.
+- Never add fake expert opinions.
+- Use ONLY the supplied information.
+- Rewrite completely in your own words.
+
+ARTICLE STRUCTURE
 
 <h2>Introduction</h2>
-<p>...</p>
+<p>60-90 words</p>
 
 <h2>What Happened?</h2>
-<p>...</p>
+<p>80-120 words</p>
 
-<h2>Key Developments</h2>
-<p>...</p>
+<h2>Key Facts</h2>
 
 <ul>
-<li>...</li>
-<li>...</li>
-<li>...</li>
+<li>Fact 1</li>
+<li>Fact 2</li>
+<li>Fact 3</li>
+<li>Fact 4</li>
 </ul>
 
-<h2>International Response</h2>
-<p>...</p>
+<h2>Why It Matters</h2>
+<p>80-120 words</p>
 
 <h2>What Happens Next?</h2>
-<p>...</p>
+<p>60-100 words</p>
 
-Return ONLY this JSON:
+Return EXACTLY this JSON:
 
 {{
-    "title":"",
-    "slug":"",
-    "category":"",
-    "meta_description":"",
-    "tags":[],
-    "image_keywords":"",
-    "article":""
+"title":"",
+"slug":"",
+"category":"",
+"meta_description":"",
+"tags":[],
+"image_keywords":"",
+"article":""
 }}
 
-Rules:
+TITLE
 
-"title"
-- SEO friendly.
-- Maximum 70 characters.
+- SEO friendly
+- Maximum 65 characters
+- Clickable
+- Natural
+- No clickbait
+- No ALL CAPS
 
-"slug"
-- Lowercase only.
-- Hyphens only.
-- No spaces.
+SLUG
 
-"category"
-Choose ONLY ONE:
+lowercase-only
+hyphen-separated
 
-World
-Politics
-Business
-Technology
-Sports
-Health
-Science
-Entertainment
+CATEGORY
 
-"tags"
-
-Choose between 1 and 3 labels from:
+Choose ONE
 
 World
 Politics
@@ -140,22 +140,35 @@ Health
 Science
 Entertainment
 
-"image_keywords"
+TAGS
 
-Write one short search phrase that would find a high-quality news image.
+Choose 2 or 3.
 
-"meta_description"
+META DESCRIPTION
 
-Maximum 160 characters.
+Maximum 155 characters.
+
+IMAGE KEYWORDS
+
+Instead of a simple keyword, generate an AI image prompt.
+
+Example:
+
+Ultra realistic editorial news photograph of world leaders meeting during a peace summit, dramatic lighting, highly detailed, professional journalism style, 16:9 composition, no text, no watermark.
+
+The prompt must match THIS article.
 
 News Title:
-{article.get("title", "")}
+
+{article.get("title","")}
 
 Summary:
-{article.get("summary", "")}
+
+{article.get("summary","")}
 
 Source:
-{article.get("source", "")}
+
+{article.get("source","")}
 """
 
         success = False
