@@ -3,7 +3,12 @@ import os
 import requests
 import urllib.parse
 
-from config.settings import REWRITTEN_JSON, IMAGE_FOLDER
+from config.settings import (
+    REWRITTEN_JSON,
+    IMAGE_FOLDER,
+)
+
+from core.cloudinary_uploader import upload_image
 
 
 def generate_images():
@@ -25,7 +30,7 @@ def generate_images():
             print(f"Article {i}: No image prompt.")
             continue
 
-        print(f"Generating image for article {i}...")
+        print(f"\nGenerating AI image for article {i}...")
 
         encoded = urllib.parse.quote(prompt)
 
@@ -46,21 +51,28 @@ def generate_images():
                 timeout=120,
             )
 
-            if response.status_code == 200:
-
-                with open(filename, "wb") as img:
-                    img.write(response.content)
-
-                article["image"] = filename
-
-                print(f"✓ Image saved: {filename}")
-
-            else:
-
+            if response.status_code != 200:
                 print("Image generation failed.")
+                continue
+
+            with open(filename, "wb") as img:
+                img.write(response.content)
+
+            print("✓ AI image generated")
+
+            print("Uploading to Cloudinary...")
+
+            cloudinary_url = upload_image(filename)
+
+            article["image"] = filename
+            article["image_url"] = cloudinary_url
+
+            print("✓ Uploaded successfully")
+            print(cloudinary_url)
 
         except Exception as e:
 
+            print("Image error:")
             print(e)
 
     with open(REWRITTEN_JSON, "w", encoding="utf-8") as f:
