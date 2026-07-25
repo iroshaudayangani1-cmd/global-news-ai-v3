@@ -37,38 +37,28 @@ def publish_articles():
 
         image_html = ""
 
-        if article.get("image_url"):
+        if article.get("image"):
+
+            filename = os.path.basename(article["image"])
+
             image_html = f"""
 <div style="text-align:center;margin:25px 0;">
-<img src="{article['image_url']}"
+<img src="{filename}"
      alt="{title}"
      style="width:100%;max-width:900px;height:auto;border-radius:12px;">
 </div>
 """
 
-        labels = ""
-
-        if tags:
-            labels = f"""
-<p style="color:#666;font-size:14px;">
-<strong>Category:</strong> {" | ".join(tags)}
-</p>
-"""
-
         content = f"""
-<div style="max-width:900px;margin:auto;font-family:Arial,sans-serif;font-size:18px;line-height:1.8;color:#222;">
+<div style="max-width:900px;margin:auto;font-family:Arial,sans-serif;font-size:18px;line-height:1.8;">
 
 <h1>{title}</h1>
 
-<p style="color:#777;">
-<strong>Published:</strong> {today}
-</p>
-
-{labels}
-
-{image_html}
+<p><strong>Published:</strong> {today}</p>
 
 <hr>
+
+{image_html}
 
 {article["article"]}
 
@@ -77,14 +67,13 @@ def publish_articles():
 <h3>About Global Viral Report</h3>
 
 <p>
-Global Viral Report delivers trusted breaking news, world affairs,
-technology, business, sports and science updates from reliable public
-sources around the world.
+Global Viral Report delivers trusted breaking news,
+technology, business, sports and world news.
 </p>
 
 <hr>
 
-<p style="font-size:14px;color:#777;">
+<p style="font-size:14px;color:#666;">
 Source: AI rewritten from trusted public news sources.
 </p>
 
