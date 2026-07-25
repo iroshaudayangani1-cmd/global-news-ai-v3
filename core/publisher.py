@@ -31,7 +31,7 @@ def publish_articles():
             print(f"Skipping duplicate: {title}")
             continue
 
-        tags = article.get("tags", [])
+        tags = [article.get("category", "World")]
 
         today = datetime.utcnow().strftime("%B %d, %Y")
 
