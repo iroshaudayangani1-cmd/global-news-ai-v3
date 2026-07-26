@@ -67,7 +67,7 @@ No extra text.
 
 GENERAL RULES
 
-- Write between 450 and 650 words.
+- Write between 700 and 900 words.
 - Use professional journalism.
 - Never invent facts.
 - Never speculate.
@@ -100,15 +100,29 @@ ARTICLE STRUCTURE
 
 Return EXACTLY this JSON:
 
-{{
+{
 "title":"",
+"seo_title":"",
 "slug":"",
 "category":"",
 "meta_description":"",
+"keywords":[],
 "tags":[],
+"social_description":"",
+"image_alt":"",
 "image_prompt":"",
+"faq":[
+{
+"question":"",
+"answer":""
+},
+{
+"question":"",
+"answer":""
+}
+],
 "article":""
-}}
+}
 
 TITLE
 
