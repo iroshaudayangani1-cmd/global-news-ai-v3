@@ -21,7 +21,11 @@ def get_access_token():
         client_id=BLOGGER_CLIENT_ID,
         client_secret=BLOGGER_CLIENT_SECRET,
     )
-
+ print("BLOG_ID:", BLOG_ID)
+print("CLIENT_ID:", BLOGGER_CLIENT_ID[:20] + "...")
+print("CLIENT_SECRET exists:", bool(BLOGGER_CLIENT_SECRET))
+print("REFRESH_TOKEN exists:", bool(BLOGGER_REFRESH_TOKEN))
+print("Refresh token length:", len(BLOGGER_REFRESH_TOKEN) if BLOGGER_REFRESH_TOKEN else 0)
     creds.refresh(Request())
 
     return creds.token
