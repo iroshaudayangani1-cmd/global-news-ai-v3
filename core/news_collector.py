@@ -10,6 +10,19 @@ RSS_FEEDS = [
     "https://feeds.skynews.com/feeds/rss/world.xml",
 ]
 
+# Domains we never want to publish
+BLOCKED_DOMAINS = [
+    "drive.google.com",
+    "docs.google.com",
+    "youtube.com",
+    "youtu.be",
+    "facebook.com",
+    "instagram.com",
+    "tiktok.com",
+    "twitter.com",
+    "x.com",
+]
+
 
 def calculate_score(title, summary):
 
@@ -64,13 +77,47 @@ def calculate_score(title, summary):
 
     score += min(len(summary) // 20, 20)
 
+    if "today" in text:
+        score += 5
+
+    if "live" in text:
+        score += 5
+
+    if "latest" in text:
+        score += 5
+
     return score
+
+
+def is_valid_article(link, title, summary):
+
+    if not link.startswith(("http://", "https://")):
+        return False
+
+    link = link.lower()
+
+    for domain in BLOCKED_DOMAINS:
+        if domain in link:
+            return False
+
+    if link.endswith(".pdf"):
+        return False
+
+    if len(title.strip()) < 20:
+        return False
+
+    if len(summary.strip()) < 80:
+        return False
+
+    return True
 
 
 def collect_news():
 
     news = []
-    seen = set()
+
+    seen_links = set()
+    seen_titles = set()
 
     for url in RSS_FEEDS:
 
@@ -85,18 +132,26 @@ def collect_news():
 
             for entry in feed.entries[:10]:
 
-                link = entry.get("link", "")
-
-                if link in seen:
-                    continue
-
-                seen.add(link)
-
+                link = entry.get("link", "").strip()
                 title = entry.get("title", "").strip()
                 summary = entry.get("summary", "").strip()
 
                 if not title or not summary:
                     continue
+
+                if not is_valid_article(link, title, summary):
+                    continue
+
+                clean_title = title.lower()
+
+                if link in seen_links:
+                    continue
+
+                if clean_title in seen_titles:
+                    continue
+
+                seen_links.add(link)
+                seen_titles.add(clean_title)
 
                 score = calculate_score(title, summary)
 
@@ -119,6 +174,9 @@ def collect_news():
         key=lambda x: x["score"],
         reverse=True
     )
+
+    # Keep only the best 20 articles
+    news = news[:20]
 
     for i, article in enumerate(news, start=1):
         article["id"] = i
