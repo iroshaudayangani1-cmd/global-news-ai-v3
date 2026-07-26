@@ -151,29 +151,25 @@ ARTICLE STRUCTURE
 
 Return EXACTLY this JSON:
 
-{
-    "title":"",
- "seo_title":"",
- "slug":"",
- "category":"",
- "meta_description":"",
- "keywords":[],
- "tags":[],
- "social_description":"",
- "image_alt":"",
- "image_prompt":"",
- "faq":[
-{
+{{
+"title":"",
+"seo_title":"",
+"slug":"",
+"category":"",
+"meta_description":"",
+"keywords":[],
+"tags":[],
+"social_description":"",
+"image_alt":"",
+"image_prompt":"",
+"faq":[
+{{
 "question":"",
 "answer":""
-},
-{
-"question":"",
-"answer":""
-}
+}}
 ],
 "article":""
-}
+}}
 
 TITLE
 
