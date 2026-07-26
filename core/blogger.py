@@ -14,6 +14,16 @@ TOKEN_URL = "https://oauth2.googleapis.com/token"
 
 def get_access_token():
 
+    print("=" * 60)
+    print("BLOGGER DEBUG")
+    print("=" * 60)
+    print("BLOG_ID:", BLOG_ID)
+    print("CLIENT_ID:", BLOGGER_CLIENT_ID[:20] + "..." if BLOGGER_CLIENT_ID else "Missing")
+    print("CLIENT_SECRET exists:", bool(BLOGGER_CLIENT_SECRET))
+    print("REFRESH_TOKEN exists:", bool(BLOGGER_REFRESH_TOKEN))
+    print("Refresh token length:", len(BLOGGER_REFRESH_TOKEN) if BLOGGER_REFRESH_TOKEN else 0)
+    print("=" * 60)
+
     creds = Credentials(
         None,
         refresh_token=BLOGGER_REFRESH_TOKEN,
@@ -21,11 +31,7 @@ def get_access_token():
         client_id=BLOGGER_CLIENT_ID,
         client_secret=BLOGGER_CLIENT_SECRET,
     )
- print("BLOG_ID:", BLOG_ID)
-print("CLIENT_ID:", BLOGGER_CLIENT_ID[:20] + "...")
-print("CLIENT_SECRET exists:", bool(BLOGGER_CLIENT_SECRET))
-print("REFRESH_TOKEN exists:", bool(BLOGGER_REFRESH_TOKEN))
-print("Refresh token length:", len(BLOGGER_REFRESH_TOKEN) if BLOGGER_REFRESH_TOKEN else 0)
+
     creds.refresh(Request())
 
     return creds.token
