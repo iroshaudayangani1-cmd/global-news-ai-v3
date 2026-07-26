@@ -67,13 +67,64 @@ No extra text.
 
 GENERAL RULES
 
-- Write between 700 and 900 words.
-- Use professional journalism.
-- Never invent facts.
-- Never speculate.
-- Never copy the original wording.
-- Keep paragraphs short.
-- Use HTML only inside the article field.
+SEO TITLE
+
+Maximum 60 characters.
+
+Must contain the primary keyword.
+
+META DESCRIPTION
+
+Maximum 155 characters.
+
+Generate an attractive Google search snippet.
+
+KEYWORDS
+
+Generate exactly five SEO keywords.
+
+Most important keyword first.
+
+TAGS
+
+Generate exactly three relevant tags.
+
+SOCIAL DESCRIPTION
+
+Generate one engaging sentence for Facebook, X and LinkedIn.
+
+IMAGE ALT
+
+Generate descriptive alt text for the image.
+
+Maximum 125 characters.
+
+FAQ
+
+Generate exactly two FAQ items.
+
+Each item must contain:
+
+question
+
+answer
+
+IMAGE PROMPT
+
+Generate a detailed AI prompt for an ultra realistic editorial news photograph.
+
+Requirements
+
+- ultra realistic
+- photojournalism
+- cinematic lighting
+- highly detailed
+- realistic people
+- 16:9 composition
+- suitable for a news website
+- no text
+- no logos
+- no watermark
 
 ARTICLE STRUCTURE
 
@@ -101,17 +152,17 @@ ARTICLE STRUCTURE
 Return EXACTLY this JSON:
 
 {
-"title":"",
-"seo_title":"",
-"slug":"",
-"category":"",
-"meta_description":"",
-"keywords":[],
-"tags":[],
-"social_description":"",
-"image_alt":"",
-"image_prompt":"",
-"faq":[
+    "title":"",
+ "seo_title":"",
+ "slug":"",
+ "category":"",
+ "meta_description":"",
+ "keywords":[],
+ "tags":[],
+ "social_description":"",
+ "image_alt":"",
+ "image_prompt":"",
+ "faq":[
 {
 "question":"",
 "answer":""
