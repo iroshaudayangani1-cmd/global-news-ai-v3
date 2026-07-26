@@ -19,7 +19,7 @@ def publish_articles():
 
     if not articles:
         print("No rewritten articles.")
-        return
+        MAX_POSTS_PER_RUN = 2
 
     existing_titles = get_recent_titles()
 
@@ -91,7 +91,7 @@ Source: AI rewritten from trusted public news sources.
         print(result["url"])
         print("=================================")
 
-        return
+        MAX_POSTS_PER_RUN = 2
 
     print("No new articles to publish today.")
 
