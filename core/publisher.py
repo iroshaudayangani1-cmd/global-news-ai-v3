@@ -7,6 +7,7 @@ from core.blogger import (
     publish_post,
     get_recent_titles,
 )
+from core.facebook import publish_to_facebook
 
 
 def publish_articles():
@@ -19,11 +20,17 @@ def publish_articles():
 
     if not articles:
         print("No rewritten articles.")
-        MAX_POSTS_PER_RUN = 2
+        return
 
     existing_titles = get_recent_titles()
 
+    posts_published = 0
+    MAX_POSTS_PER_RUN = 2
+
     for article in articles:
+
+        if posts_published >= MAX_POSTS_PER_RUN:
+            break
 
         title = article["title"]
 
@@ -78,7 +85,7 @@ Source: AI rewritten from trusted public news sources.
 </div>
 """
 
-        print("Publishing:", title)
+        print("Publishing to Blogger:", title)
 
         result = publish_post(
             title=title,
@@ -91,9 +98,16 @@ Source: AI rewritten from trusted public news sources.
         print(result["url"])
         print("=================================")
 
-        MAX_POSTS_PER_RUN = 2
+        print("Publishing to Facebook...")
 
-    print("No new articles to publish today.")
+        publish_to_facebook(
+            title=title,
+            blog_url=result["url"],
+        )
+
+        posts_published += 1
+
+    print("Publishing process finished.")
 
 
 if __name__ == "__main__":
