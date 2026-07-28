@@ -8,16 +8,31 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      # ==========================
+      # GEMINI
+      # ==========================
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
+      # ==========================
+      # BLOGGER
+      # ==========================
       BLOG_ID: ${{ secrets.BLOG_ID }}
       BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
       BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
       BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
 
+      # ==========================
+      # CLOUDINARY
+      # ==========================
       CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+
+      # ==========================
+      # FACEBOOK
+      # ==========================
+      FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+      FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
 
     steps:
       - name: Checkout Repository
@@ -54,6 +69,22 @@ jobs:
             exit 1
           else
             echo "✅ Cloudinary secrets loaded"
+          fi
+
+      - name: Check Facebook
+        run: |
+          if [ -z "$FACEBOOK_PAGE_ID" ]; then
+            echo "❌ FACEBOOK_PAGE_ID missing"
+            exit 1
+          else
+            echo "✅ FACEBOOK_PAGE_ID loaded"
+          fi
+
+          if [ -z "$FACEBOOK_PAGE_ACCESS_TOKEN" ]; then
+            echo "❌ FACEBOOK_PAGE_ACCESS_TOKEN missing"
+            exit 1
+          else
+            echo "✅ FACEBOOK_PAGE_ACCESS_TOKEN loaded"
           fi
 
       - name: Run Main
