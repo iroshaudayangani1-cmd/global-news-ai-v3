@@ -304,20 +304,25 @@ Source:
 
                 break
 
-        if not success:
-    print("\nGemini unavailable.")
-    print("Switching to OpenRouter...\n")
+       if not success:
 
-    try:
+            print("\nGemini unavailable.")
+            print("Switching to OpenRouter...\n")
 
-        text = rewrite_with_openrouter(prompt)
+            try:
 
-        text = clean_json(text)
+                text = rewrite_with_openrouter(prompt)
 
-        rewritten.append(json.loads(text))
+                text = clean_json(text)
 
-        print("✓ OpenRouter Success")
+                rewritten.append(json.loads(text))
 
+                print("✓ OpenRouter Success")
+
+            except Exception as e:
+
+                print(f"OpenRouter failed: {e}")
+                print("Skipping article.")
     except Exception as e:
 
         print(f"OpenRouter failed: {e}")
