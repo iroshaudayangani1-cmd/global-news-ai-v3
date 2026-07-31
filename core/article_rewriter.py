@@ -305,7 +305,6 @@ Source:
                 break
 
         if not success:
-
     print("\nGemini unavailable.")
     print("Switching to OpenRouter...\n")
 
