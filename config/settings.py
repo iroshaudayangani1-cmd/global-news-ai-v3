@@ -11,6 +11,9 @@ GEMINI_MODEL = "gemini-3.5-flash"
 GEMINI_MAX_RETRIES = 5
 GEMINI_RETRY_DELAY = 15
 
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+OPENROUTER_MODEL = "qwen/qwen3-235b-a22b"
 
 # ==========================
 # BLOGGER
