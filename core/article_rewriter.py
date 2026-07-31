@@ -304,7 +304,7 @@ Source:
 
                 break
 
-       if not success:
+        if not success:
 
             print("\nGemini unavailable.")
             print("Switching to OpenRouter...\n")
@@ -323,11 +323,6 @@ Source:
 
                 print(f"OpenRouter failed: {e}")
                 print("Skipping article.")
-    except Exception as e:
-
-        print(f"OpenRouter failed: {e}")
-        print("Skipping article.")
-
     try:
 
         text = rewrite_with_openrouter(prompt)
