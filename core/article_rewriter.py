@@ -3,20 +3,49 @@ import os
 import time
 
 from google import genai
+import requests
 
 from config.settings import (
     GEMINI_API_KEY,
     GEMINI_MODEL,
     GEMINI_MAX_RETRIES,
     GEMINI_RETRY_DELAY,
+    OPENROUTER_API_KEY,
+    OPENROUTER_MODEL,
     NEWS_JSON,
     REWRITTEN_JSON,
 )
 
-
 def clean_json(text):
     text = text.strip()
+def rewrite_with_openrouter(prompt):
 
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": OPENROUTER_MODEL,
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        "temperature": 0.4
+    }
+
+    r = requests.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        headers=headers,
+        json=payload,
+        timeout=120,
+    )
+
+    r.raise_for_status()
+
+    return r.json()["choices"][0]["message"]["content"]
     if text.startswith("```json"):
         text = text[7:]
 
@@ -276,7 +305,24 @@ Source:
                 break
 
         if not success:
-            print("Skipping article.")
+        
+    print("\nGemini unavailable.")
+    print("Switching to OpenRouter...\n")
+
+    try:
+
+        text = rewrite_with_openrouter(prompt)
+
+        text = clean_json(text)
+
+        rewritten.append(json.loads(text))
+
+        print("✓ OpenRouter Success")
+
+    except Exception as e:
+
+        print("OpenRouter failed:", e)
+        print("Skipping article.")
 
     os.makedirs("output/news", exist_ok=True)
 
