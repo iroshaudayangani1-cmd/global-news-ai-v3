@@ -11,7 +11,11 @@ jobs:
       # ==========================
       # GEMINI
       # ==========================
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+     # ==========================
+     # GEMINI
+    # ==========================
+     GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
       # ==========================
       # BLOGGER
