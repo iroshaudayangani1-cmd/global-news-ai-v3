@@ -4,37 +4,22 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+ test:
     runs-on: ubuntu-latest
 
     env:
-      # ==========================
-      # GEMINI
-      # ==========================
-     # ==========================
-     # GEMINI
-    # ==========================
-     GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
 
-      # ==========================
-      # BLOGGER
-      # ==========================
       BLOG_ID: ${{ secrets.BLOG_ID }}
       BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
       BLOGGER_CLIENT_SECRET: ${{ secrets.BLOGGER_CLIENT_SECRET }}
       BLOGGER_REFRESH_TOKEN: ${{ secrets.BLOGGER_REFRESH_TOKEN }}
 
-      # ==========================
-      # CLOUDINARY
-      # ==========================
       CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
       CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
       CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
 
-      # ==========================
-      # FACEBOOK
-      # ==========================
       FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
       FACEBOOK_PAGE_ACCESS_TOKEN: ${{ secrets.FACEBOOK_PAGE_ACCESS_TOKEN }}
 
@@ -52,11 +37,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-          echo "=============================="
-          echo "Installed google-genai Version"
-          echo "=============================="
-          pip show google-genai
-
       - name: Check Gemini Key
         run: |
           if [ -z "$GEMINI_API_KEY" ]; then
@@ -64,6 +44,16 @@ jobs:
             exit 1
           else
             echo "✅ GEMINI_API_KEY loaded successfully"
+          fi
+
+      - name: Check OpenRouter Key
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "❌ OPENROUTER_API_KEY is NOT available"
+            exit 1
+          else
+            echo "✅ OPENROUTER_API_KEY loaded successfully"
+            echo "Key Length: ${#OPENROUTER_API_KEY}"
           fi
 
       - name: Check Cloudinary
@@ -92,10 +82,10 @@ jobs:
           fi
 
       - name: Run Main
-        run: |
-          python main.py
+        run: python main.py
 
       - name: Upload News Files
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: news-output
