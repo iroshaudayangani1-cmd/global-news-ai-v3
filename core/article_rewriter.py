@@ -173,7 +173,11 @@ Source:
 {article.get("source","")}
 """
 
-        success = False
+                success = False
+
+        # ==========================
+        # GEMINI
+        # ==========================
 
         for attempt in range(1, GEMINI_MAX_RETRIES + 1):
 
@@ -188,6 +192,77 @@ Source:
                     model=GEMINI_MODEL,
                     contents=prompt,
                 )
+
+                if not response.text:
+                    raise Exception("Gemini returned empty response.")
+
+                text = clean_json(response.text)
+
+                rewritten.append(json.loads(text))
+
+                print("✓ Gemini Success")
+
+                success = True
+                break
+
+            except Exception as e:
+
+                print(f"Attempt {attempt} failed: {e}")
+
+                if (
+                    ("503" in str(e))
+                    or ("429" in str(e))
+                    or ("RESOURCE_EXHAUSTED" in str(e))
+                ):
+
+                    wait = GEMINI_RETRY_DELAY * attempt
+
+                    print(f"Gemini busy. Waiting {wait} seconds...")
+
+                    time.sleep(wait)
+
+                    continue
+
+                break
+
+        # ==========================
+        # DASHSCOPE FALLBACK
+        # ==========================
+
+        if not success:
+
+            print("\nGemini unavailable.")
+            print("Switching to DashScope...\n")
+
+            try:
+
+                text = rewrite_with_dashscope(prompt)
+
+                text = clean_json(text)
+
+                rewritten.append(json.loads(text))
+
+                print("✓ DashScope Success")
+
+                success = True
+
+            except Exception as e:
+
+                print("DashScope failed:", e)
+                print("Skipping article.")
+
+    os.makedirs("output/news", exist_ok=True)
+
+    with open(REWRITTEN_JSON, "w", encoding="utf-8") as f:
+
+        json.dump(
+            rewritten,
+            f,
+            indent=4,
+            ensure_ascii=False,
+        )
+
+    print(f"\nFinished! Rewrote {len(rewritten)} articles.")
 
                 text = clean_json(response.text)
 
