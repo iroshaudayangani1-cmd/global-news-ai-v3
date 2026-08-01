@@ -18,26 +18,26 @@ from config.settings import (
 )
 
 
-def publish_to_facebook(title, article_html, image_url, blog_url):
+def publish_to_facebook(title, article, image_url, blog_url):
 
-    # Remove HTML tags
+    url = f"https://graph.facebook.com/v25.0/{FACEBOOK_PAGE_ID}/photos"
+
+    # Remove HTML tags for Facebook
     import re
 
-    article = re.sub("<.*?>", "", article_html)
-    article = article.replace("\n", " ").strip()
+    clean_article = re.sub("<.*?>", "", article)
+    clean_article = clean_article.replace("&nbsp;", " ")
 
-    # Facebook only needs the first part
-    article = article[:1800]
+    if len(clean_article) > 1800:
+        clean_article = clean_article[:1800] + "..."
 
     message = f"""{title}
 
-{article}
+{clean_article}
 
 Read more:
 {blog_url}
 """
-
-    url = f"https://graph.facebook.com/v25.0/{FACEBOOK_PAGE_ID}/photos"
 
     payload = {
         "url": image_url,
@@ -45,26 +45,19 @@ Read more:
         "access_token": FACEBOOK_PAGE_ACCESS_TOKEN,
     }
 
-    try:
+    response = requests.post(
+        url,
+        data=payload,
+        timeout=120,
+    )
 
-        response = requests.post(
-            url,
-            data=payload,
-            timeout=60,
-        )
+    print("=" * 60)
+    print("FACEBOOK DEBUG")
+    print("=" * 60)
+    print("Status:", response.status_code)
+    print(response.text)
+    print("=" * 60)
 
-        print("=" * 60)
-        print("FACEBOOK DEBUG")
-        print("=" * 60)
-        print("Status:", response.status_code)
-        print(response.text)
-        print("=" * 60)
+    response.raise_for_status()
 
-        response.raise_for_status()
-
-        print("✓ Successfully posted to Facebook")
-
-    except Exception as e:
-
-        print("❌ Facebook publishing failed")
-        print(e)
+    print("✓ Successfully posted to Facebook")
