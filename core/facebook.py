@@ -1,3 +1,23 @@
+import requests
+import requests
+
+from config.settings import (
+    FACEBOOK_PAGE_ID,
+    FACEBOOK_PAGE_ACCESS_TOKEN,
+)
+
+print("=" * 60)
+print("FACEBOOK SETTINGS")
+print("=" * 60)
+print("PAGE ID:", repr(FACEBOOK_PAGE_ID))
+print("TOKEN EXISTS:", bool(FACEBOOK_PAGE_ACCESS_TOKEN))
+print("=" * 60)
+from config.settings import (
+    FACEBOOK_PAGE_ID,
+    FACEBOOK_PAGE_ACCESS_TOKEN,
+)
+
+
 def publish_to_facebook(title, article_html, image_url, blog_url):
 
     # Remove HTML tags
