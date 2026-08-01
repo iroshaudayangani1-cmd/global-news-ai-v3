@@ -1,37 +1,27 @@
-import requests
-import requests
+def publish_to_facebook(title, article_html, image_url, blog_url):
 
-from config.settings import (
-    FACEBOOK_PAGE_ID,
-    FACEBOOK_PAGE_ACCESS_TOKEN,
-)
+    # Remove HTML tags
+    import re
 
-print("=" * 60)
-print("FACEBOOK SETTINGS")
-print("=" * 60)
-print("PAGE ID:", repr(FACEBOOK_PAGE_ID))
-print("TOKEN EXISTS:", bool(FACEBOOK_PAGE_ACCESS_TOKEN))
-print("=" * 60)
-from config.settings import (
-    FACEBOOK_PAGE_ID,
-    FACEBOOK_PAGE_ACCESS_TOKEN,
-)
+    article = re.sub("<.*?>", "", article_html)
+    article = article.replace("\n", " ").strip()
 
-
-def publish_to_facebook(title, blog_url):
-
-    url = f"https://graph.facebook.com/v25.0/{FACEBOOK_PAGE_ID}/feed"
+    # Facebook only needs the first part
+    article = article[:1800]
 
     message = f"""{title}
 
-🔥 Read the full article:
-{blog_url}
+{article}
 
-#BreakingNews #WorldNews #TheGlobalBrief
+Read more:
+{blog_url}
 """
 
+    url = f"https://graph.facebook.com/v25.0/{FACEBOOK_PAGE_ID}/photos"
+
     payload = {
-        "message": message,
+        "url": image_url,
+        "caption": message,
         "access_token": FACEBOOK_PAGE_ACCESS_TOKEN,
     }
 
