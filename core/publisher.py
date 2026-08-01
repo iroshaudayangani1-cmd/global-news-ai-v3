@@ -101,9 +101,11 @@ Source: AI rewritten from trusted public news sources.
         print("Publishing to Facebook...")
 
         publish_to_facebook(
-            title=title,
-            blog_url=result["url"],
-        )
+    title=title,
+    article=article["article"],
+    image_url=article.get("image_url"),
+    blog_url=result["url"],
+)
 
         posts_published += 1
 
