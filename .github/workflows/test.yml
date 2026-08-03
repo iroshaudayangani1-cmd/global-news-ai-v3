@@ -9,7 +9,7 @@ jobs:
 
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+     
 
       BLOG_ID: ${{ secrets.BLOG_ID }}
       BLOGGER_CLIENT_ID: ${{ secrets.BLOGGER_CLIENT_ID }}
@@ -46,15 +46,7 @@ jobs:
             echo "✅ GEMINI_API_KEY loaded successfully"
           fi
 
-      - name: Check OpenRouter Key
-        run: |
-          if [ -z "$OPENROUTER_API_KEY" ]; then
-            echo "❌ OPENROUTER_API_KEY is NOT available"
-            exit 1
-          else
-            echo "✅ OPENROUTER_API_KEY loaded successfully"
-            echo "Key Length: ${#OPENROUTER_API_KEY}"
-          fi
+    
 
       - name: Check Cloudinary
         run: |
